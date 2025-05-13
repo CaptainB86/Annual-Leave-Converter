@@ -30,5 +30,3 @@ jobs:
           sleep 5
           pkill streamlit
 
-      - name: Build Docker image
-        run: docker build -t leave-converter .
