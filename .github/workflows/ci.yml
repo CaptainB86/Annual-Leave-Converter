@@ -1,0 +1,34 @@
+name: CI # The workflow's name shown in GitHub Actions tab
+
+on:
+  push: # When to run the workflow
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build: # Job name (can have multiple jobs)
+
+    runs-on: ubuntu-latest # Run the job on a Linux virtual machine
+
+    steps: # Steps run one after the other
+      - name: Checkout code
+        uses: actions/checkout@v3 # Clones your GitHub repo into the VM
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10 # Specifies Python version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Streamlit app (test it starts)
+        run: |
+          streamlit run app/leave_converter.py &
+          sleep 5
+          pkill streamlit
+
+      - name: Build Docker image
+        run: docker build -t leave-converter .
